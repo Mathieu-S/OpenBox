@@ -12,8 +12,8 @@ using OpenBox.Persistence;
 namespace OpenBox.Persistence.Migrations
 {
     [DbContext(typeof(OpenBoxDbContext))]
-    [Migration("20220912124640_AddProduct")]
-    partial class AddProduct
+    [Migration("20220916210950_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -37,12 +37,15 @@ namespace OpenBox.Persistence.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("Brands");
 
                     b.HasData(
                         new
                         {
-                            Id = new Guid("2318b8ca-7d6b-4af6-9478-1707a5d57372"),
+                            Id = new Guid("df227495-6900-437f-bb8b-0fab72c65cf5"),
                             Name = "Acme"
                         });
                 });

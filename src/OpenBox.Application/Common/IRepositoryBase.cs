@@ -12,8 +12,9 @@ public interface IRepositoryBase<T>
     /// <remarks>
     /// The entities are not tracked.
     /// </remarks>
+    /// <param name="ct">A <see cref="CancellationToken"/> to observe while waiting for the task to complete</param>
     /// <returns>A list of entity.</returns>
-    Task<IEnumerable<T>> GetAllAsync();
+    Task<IEnumerable<T>> GetAllAsync(CancellationToken ct);
 
     /// <summary>
     /// Get all entity type with pagination system.
@@ -23,28 +24,19 @@ public interface IRepositoryBase<T>
     /// </remarks>
     /// <param name="pageIndex">The number of page.</param>
     /// <param name="pageSize">The number of elements.</param>
+    /// <param name="ct">A <see cref="CancellationToken"/> to observe while waiting for the task to complete</param>
     /// <returns>A list of entity.</returns>
-    Task<IEnumerable<T>> GetAllAsync(int pageIndex, int pageSize);
-    
-    /// <summary>
-    /// Get a specified entity.
-    /// </summary>
-    /// <remarks>
-    /// The entity is not tracked.
-    /// </remarks>
-    /// <param name="id">The Guid of entity.</param>
-    /// <returns>The specified entity. Return null if the entity is not found.</returns>
-    /// <exception cref="ArgumentException">Throw when <see cref="Guid"/> is empty.</exception>
-    Task<T?> GetAsync(Guid id);
+    Task<IEnumerable<T>> GetAllAsync(int pageIndex, int pageSize, CancellationToken ct);
 
     /// <summary>
     /// Get a specified entity.
     /// </summary>
     /// <param name="id">The Guid of entity.</param>
     /// <param name="asTracking">Indicate whether the entity should be tracked.</param>
+    /// <param name="ct">A <see cref="CancellationToken"/> to observe while waiting for the task to complete</param>
     /// <returns>The specified entity. Return null if the entity is not found.</returns>
     /// <exception cref="ArgumentException">Throw when <see cref="Guid"/> is empty.</exception>
-    Task<T?> GetAsync(Guid id, bool asTracking);
+    Task<T?> GetAsync(Guid id, bool asTracking, CancellationToken ct);
 
     /// <summary>
     /// Add an entity.

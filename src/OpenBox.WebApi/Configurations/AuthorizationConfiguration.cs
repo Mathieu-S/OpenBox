@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Authorization;
-
 namespace OpenBox.WebApi.Configurations;
 
 /// <summary>
@@ -13,10 +11,10 @@ public static class AuthorizationConfiguration
     /// <param name="builder">The <see cref="WebApplicationBuilder"/> for web applications and services.</param>
     public static void AddAuthorizationConfiguration(this WebApplicationBuilder builder)
     {
-        // builder.Services
-        //     .AddAuthorization(options =>
-        //     {
-        //
-        //     });
+        builder.Services
+            .AddAuthorization(options =>
+            {
+                options.AddPolicy("Manager", policy => policy.RequireClaim("base_group", "manager"));
+            });
     }
 }

@@ -37,7 +37,7 @@ public class CreateBrandHandlerTest
         Assert.Equal(createdId, result);
         await _unitOfWork
             .Received()
-            .SaveChangesAsync();
+            .SaveChangesAsync(CancellationToken.None);
     }
 
     [Theory]

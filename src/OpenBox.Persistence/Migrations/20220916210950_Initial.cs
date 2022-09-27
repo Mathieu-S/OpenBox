@@ -5,14 +5,21 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace OpenBox.Persistence.Migrations
 {
-    public partial class AddProduct : Migration
+    public partial class Initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DeleteData(
-                table: "Brands",
-                keyColumn: "Id",
-                keyValue: new Guid("2ef60a82-a925-4d20-8c46-cb07b56d3be0"));
+            migrationBuilder.CreateTable(
+                name: "Brands",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    Name = table.Column<string>(type: "character varying(255)", maxLength: 255, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Brands", x => x.Id);
+                });
 
             migrationBuilder.CreateTable(
                 name: "Products",
@@ -38,7 +45,13 @@ namespace OpenBox.Persistence.Migrations
             migrationBuilder.InsertData(
                 table: "Brands",
                 columns: new[] { "Id", "Name" },
-                values: new object[] { new Guid("2318b8ca-7d6b-4af6-9478-1707a5d57372"), "Acme" });
+                values: new object[] { new Guid("df227495-6900-437f-bb8b-0fab72c65cf5"), "Acme" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Brands_Name",
+                table: "Brands",
+                column: "Name",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_Products_BrandId",
@@ -51,15 +64,8 @@ namespace OpenBox.Persistence.Migrations
             migrationBuilder.DropTable(
                 name: "Products");
 
-            migrationBuilder.DeleteData(
-                table: "Brands",
-                keyColumn: "Id",
-                keyValue: new Guid("2318b8ca-7d6b-4af6-9478-1707a5d57372"));
-
-            migrationBuilder.InsertData(
-                table: "Brands",
-                columns: new[] { "Id", "Name" },
-                values: new object[] { new Guid("2ef60a82-a925-4d20-8c46-cb07b56d3be0"), "Acme" });
+            migrationBuilder.DropTable(
+                name: "Brands");
         }
     }
 }

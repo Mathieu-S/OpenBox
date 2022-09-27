@@ -18,7 +18,7 @@ public class GetBrandHandler : IQueryHandler<GetBrand, BrandItem>
     {
         Guard.Against.Null(query);
 
-        var brand = await _brandRepository.GetAsync(query.Id);
+        var brand = await _brandRepository.GetAsync(query.Id, false, ct);
         if (brand is null)
         {
             throw new EntityNotFoundException();

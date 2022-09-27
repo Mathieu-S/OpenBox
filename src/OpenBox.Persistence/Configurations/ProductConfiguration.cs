@@ -8,6 +8,7 @@ public class ProductConfiguration : IEntityTypeConfiguration<Product>
 {
     public void Configure(EntityTypeBuilder<Product> builder)
     {
+        // Entity column specification
         builder
             .HasOne(x => x.Brand)
             .WithMany();

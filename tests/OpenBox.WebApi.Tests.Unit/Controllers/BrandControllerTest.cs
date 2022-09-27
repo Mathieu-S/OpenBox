@@ -11,14 +11,14 @@ using Xunit;
 
 namespace OpenBox.WebApi.Tests.Unit.Controllers;
 
-public class BrandControllerTest
+public class BrandsControllerTest
 {
-    private readonly BrandController _controller;
+    private readonly BrandsController _controller;
 
-    public BrandControllerTest()
+    public BrandsControllerTest()
     {
-        var logger = new NullLogger<BrandController>();
-        _controller = new BrandController(logger);
+        var logger = new NullLogger<BrandsController>();
+        _controller = new BrandsController(logger);
     }
 
     [Fact]

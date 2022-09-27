@@ -20,7 +20,7 @@ public class DeleteBrandHandler : ICommandHandler<DeleteBrand>
     {
         Guard.Against.Null(command, nameof(command));
 
-        var brand = await _brandRepository.GetAsync(command.Id, true);
+        var brand = await _brandRepository.GetAsync(command.Id, true, ct);
         if (brand is null)
         {
             throw new EntityNotFoundException();
@@ -28,7 +28,7 @@ public class DeleteBrandHandler : ICommandHandler<DeleteBrand>
 
         _brandRepository.Delete(brand);
 
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync(ct);
     }
 }
 

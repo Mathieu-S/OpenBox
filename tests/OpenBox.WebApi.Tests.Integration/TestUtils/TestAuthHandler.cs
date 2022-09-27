@@ -9,7 +9,7 @@ namespace OpenBox.WebApi.Tests.Integration.TestUtils;
 public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions>
 {
     public const string DefaultScheme = "Test";
-    
+
     public TestAuthHandler(IOptionsMonitor<AuthenticationSchemeOptions> options, ILoggerFactory logger,
         UrlEncoder encoder, ISystemClock clock) : base(options, logger, encoder, clock)
     {
@@ -18,14 +18,14 @@ public class TestAuthHandler : AuthenticationHandler<AuthenticationSchemeOptions
     protected override Task<AuthenticateResult> HandleAuthenticateAsync()
     {
         AuthenticateResult result;
-        
+
         if (Request.Headers.Authorization.Count == 0)
         {
-            result = AuthenticateResult.Fail("Forbidden");
+            result = AuthenticateResult.Fail("Unauthorized");
             return Task.FromResult(result);
         }
-        
-        var claims = new[] { new Claim(ClaimTypes.Name, "Test user") };
+
+        var claims = new[] { new Claim(ClaimTypes.Name, "Test user"), new Claim("base_group", "manager") };
         var identity = new ClaimsIdentity(claims, "Test");
         var principal = new ClaimsPrincipal(identity);
         var ticket = new AuthenticationTicket(principal, "Test");

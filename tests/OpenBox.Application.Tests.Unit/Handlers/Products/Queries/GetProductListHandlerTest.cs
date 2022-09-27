@@ -25,7 +25,7 @@ public class GetProductListHandlerTest
         var brand = new Brand { Id = Guid.NewGuid(), Name = "Acme" };
         var product = new Product { Id = Guid.NewGuid(), Name = "Fork", Description = null, Price = 10, Brand = brand };
         _productRepository
-            .GetAllAsync()
+            .GetAllAsync(CancellationToken.None)
             .Returns(new List<Product> { product });
 
         // Act

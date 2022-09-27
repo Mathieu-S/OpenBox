@@ -22,11 +22,11 @@ public class GetProductListHandler : IQueryHandler<GetProductList, IEnumerable<P
         
         if (query.PageIndex is not null && query.PageSize is not null)
         {
-            products = await _productRepository.GetAllAsync(query.PageIndex.Value, query.PageSize.Value);
+            products = await _productRepository.GetAllAsync(query.PageIndex.Value, query.PageSize.Value, ct);
         }
         else
         {
-            products = await _productRepository.GetAllAsync();
+            products = await _productRepository.GetAllAsync(ct);
         }
 
         return products

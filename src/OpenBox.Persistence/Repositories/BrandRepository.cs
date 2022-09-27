@@ -14,14 +14,6 @@ public class BrandRepository : RepositoryBase<Brand>, IBrandRepository
     }
 
     /// <inheritdoc/>
-    public async Task<Brand?> GetByNameAsync(string name)
-    {
-        Guard.Against.NullOrWhiteSpace(name);
-
-        return await DbContext.Brands.Where(x => x.Name == name).FirstOrDefaultAsync();
-    }
-
-    /// <inheritdoc/>
     public async Task<Brand?> GetByNameAsync(string name, bool asTracking)
     {
         Guard.Against.NullOrWhiteSpace(name);

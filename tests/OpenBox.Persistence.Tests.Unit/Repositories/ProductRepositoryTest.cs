@@ -21,7 +21,7 @@ public class ProductRepositoryTest : IClassFixture<ProductSeedDataFixture>
     public async Task Get_All()
     {
         // Act
-        var result = await _productRepository.GetAllAsync();
+        var result = await _productRepository.GetAllAsync(CancellationToken.None);
 
         // Assert
         Assert.NotNull(result);
@@ -38,7 +38,7 @@ public class ProductRepositoryTest : IClassFixture<ProductSeedDataFixture>
         var brandId = _productsInDb.First().Id;
 
         // Act
-        var result = await _productRepository.GetAsync(brandId, asTracking);
+        var result = await _productRepository.GetAsync(brandId, asTracking, CancellationToken.None);
 
         // Assert
         Assert.NotNull(result);
@@ -49,7 +49,7 @@ public class ProductRepositoryTest : IClassFixture<ProductSeedDataFixture>
     public async Task Get_Unknown()
     {
         // Act
-        var result = await _productRepository.GetAsync(Guid.NewGuid());
+        var result = await _productRepository.GetAsync(Guid.NewGuid(), false, CancellationToken.None);
 
         // Assert
         Assert.Null(result);

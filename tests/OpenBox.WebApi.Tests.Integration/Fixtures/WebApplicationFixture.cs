@@ -21,17 +21,20 @@ public class WebApplicationFixture : IDisposable
                 builder.ConfigureTestServices(services =>
                 {
                     // Overwrite default DbContext
-                    var descriptor = services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<OpenBoxDbContext>));
+                    var descriptor =
+                        services.SingleOrDefault(d => d.ServiceType == typeof(DbContextOptions<OpenBoxDbContext>));
                     services.Remove(descriptor!);
                     services.AddDbContext<OpenBoxDbContext>(option => option.UseInMemoryDatabase("TestDatabase"));
 
                     // Bypass the JWT validation
-                    services.AddAuthentication(options =>
-                    {
-                        options.DefaultAuthenticateScheme = TestAuthHandler.DefaultScheme;
-                        options.DefaultScheme = TestAuthHandler.DefaultScheme;
-                    }).AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(
-                        TestAuthHandler.DefaultScheme, _ => { });
+                    services
+                        .AddAuthentication(options =>
+                        {
+                            options.DefaultAuthenticateScheme = TestAuthHandler.DefaultScheme;
+                            options.DefaultScheme = TestAuthHandler.DefaultScheme;
+                        })
+                        .AddScheme<AuthenticationSchemeOptions, TestAuthHandler>(TestAuthHandler.DefaultScheme,
+                            _ => { });
                 });
             });
 

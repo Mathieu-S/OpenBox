@@ -21,7 +21,7 @@ public class BrandTest
     public async Task Get_Many()
     {
         // Act
-        var response = await _application.Client.GetAsync("/brand");
+        var response = await _application.Client.GetAsync("/brands");
 
         // Assert
         Assert.NotNull(response);
@@ -35,7 +35,7 @@ public class BrandTest
         var brandToGet = "129c5546-4a6d-454e-848a-fe75b58d5cf7";
 
         // Act
-        var response = await _application.Client.GetAsync($"/brand/{brandToGet}");
+        var response = await _application.Client.GetAsync($"/brands/{brandToGet}");
 
         // Assert
         Assert.NotNull(response);
@@ -49,7 +49,7 @@ public class BrandTest
         var newBrand = new CreateBrand(Faker.Company.Name());
 
         // Act
-        var response = await _application.Client.PostAsJsonAsync("/brand", newBrand);
+        var response = await _application.Client.PostAsJsonAsync("/brands", newBrand);
 
         // Assert
         Assert.NotNull(response);
@@ -63,7 +63,7 @@ public class BrandTest
         var brandToEdit = new UpdateBrand(Guid.Parse("b9371076-60d2-43c4-9856-8b8799e9ce69"), Faker.Company.Name());
 
         // Act
-        var response = await _application.Client.PutAsJsonAsync($"/brand/{brandToEdit.Id}", brandToEdit);
+        var response = await _application.Client.PutAsJsonAsync($"/brands/{brandToEdit.Id}", brandToEdit);
 
         // Assert
         Assert.NotNull(response);
@@ -77,7 +77,7 @@ public class BrandTest
         var brandToDelete = Guid.Parse("dfedf0f8-eb13-4f98-bf2f-6f7b4847c062");
 
         // Act
-        var response = await _application.Client.DeleteAsync($"/brand/{brandToDelete}");
+        var response = await _application.Client.DeleteAsync($"/brands/{brandToDelete}");
 
         // Assert
         Assert.NotNull(response);

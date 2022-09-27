@@ -3,68 +3,68 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using OpenBox.Application.Common;
 using OpenBox.Application.Exceptions;
-using OpenBox.Application.Handlers.Brands.Commands;
-using OpenBox.Application.Handlers.Brands.Queries;
+using OpenBox.Application.Handlers.Products.Commands;
+using OpenBox.Application.Handlers.Products.Queries;
 
 namespace OpenBox.WebApi.Controllers;
 
-/// <summary>
-/// Controller API to manage brands.
-/// </summary>
 [ApiController]
+[Authorize("Manager")]
 [Route("[controller]")]
 [Produces("application/json")]
-public class BrandController : ControllerBase
+public class ProductsController : ControllerBase
 {
-    private readonly ILogger<BrandController> _logger;
+    private readonly ILogger<ProductsController> _logger;
 
-    public BrandController(ILogger<BrandController> logger)
+    public ProductsController(ILogger<ProductsController> logger)
     {
         _logger = Guard.Against.Null(logger, nameof(logger));
     }
-
+    
     /// <summary>
-    /// Get all brands.
+    /// Get all products.
     /// </summary>
     /// <param name="handler">The handler bound to the controller route.</param>
     /// <param name="query"></param>
     /// <param name="ct">The CancellationToken.</param>
     /// <returns></returns>
     [HttpGet]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<BrandListItem>))]
+    [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(IEnumerable<ProductListItem>))]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> Get(
-        [FromServices] IQueryHandler<GetBrandList, IEnumerable<BrandListItem>> handler,
-        [FromQuery] GetBrandList query,
+        [FromServices] IQueryHandler<GetProductList, IEnumerable<ProductListItem>> handler,
+        [FromQuery] GetProductList query,
         CancellationToken ct
     )
     {
-        var brands = await handler.Handle(query, ct);
-        return Ok(brands);
+        var products = await handler.Handle(query, ct);
+        return Ok(products);
     }
-
+    
     /// <summary>
-    /// Get a brand by ID.
+    /// Get a product by ID.
     /// </summary>
     /// <param name="handler">The handler bound to the controller route.</param>
-    /// <param name="id">The Id of Brand.</param>
+    /// <param name="id">The Id of Product.</param>
     /// <param name="ct">The CancellationToken.</param>
     /// <returns></returns>
     [HttpGet("{id:guid}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BrandItem))]
+    [AllowAnonymous]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductItem))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<IActionResult> Get(
-        [FromServices] IQueryHandler<GetBrand, BrandItem> handler,
+        [FromServices] IQueryHandler<GetProduct, ProductItem> handler,
         [FromRoute] Guid id,
         CancellationToken ct
     )
     {
-        BrandItem brand;
+        ProductItem product;
 
         try
         {
-            brand = await handler.Handle(new GetBrand(id), ct);
+            product = await handler.Handle(new GetProduct(id), ct);
         }
         catch (ArgumentException e)
         {
@@ -76,68 +76,78 @@ public class BrandController : ControllerBase
             return NotFound();
         }
 
-        return Ok(brand);
+        return Ok(product);
     }
-
+    
     /// <summary>
-    /// Create a brand.
+    /// Create a product.
     /// </summary>
     /// <param name="handler">The handler bound to the controller route.</param>
-    /// <param name="brandDto">The dto.</param>
+    /// <param name="productDto">The dto.</param>
     /// <param name="ct">The CancellationToken.</param>
     /// <returns></returns>
-    [Authorize]
     [HttpPost]
     [ProducesResponseType(StatusCodes.Status201Created, Type = typeof(Guid))]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Post(
-        [FromServices] ICommandHandler<CreateBrand, Guid> handler,
-        [FromBody] CreateBrand brandDto,
+        [FromServices] ICommandHandler<CreateProduct, Guid> handler,
+        [FromBody] CreateProduct productDto,
         CancellationToken ct
     )
     {
-        Guid idBrand;
+        Guid idProduct;
 
         try
         {
-            idBrand = await handler.Handle(brandDto, ct);
+            idProduct = await handler.Handle(productDto, ct);
         }
         catch (ArgumentException e)
         {
             return BadRequest(e.Message);
         }
+        catch (InvalidOperationException e)
+        {
+            return BadRequest(e.Message);
+        }
+        catch (ContextCannotBeSavedException e)
+        {
+            return Conflict(e.Message);
+        }
 
-        _logger.LogInformation("The brand '{brandDto}' has been created with ID:{idBrand}.", brandDto.Name,
-            idBrand.ToString());
-        return CreatedAtAction("Get", idBrand.ToString());
+        _logger.LogInformation("The brand '{brandDto}' has been created with ID:{idBrand}.", productDto.Name,
+            idProduct.ToString());
+        return CreatedAtAction("Get", idProduct.ToString());
     }
-
+    
     /// <summary>
-    /// Update a brand.
+    /// Update a product.
     /// </summary>
     /// <param name="handler">The handler bound to the controller route.</param>
     /// <param name="id">The Id of Brand.</param>
-    /// <param name="brandDto">The dto.</param>
+    /// <param name="productDto">The dto.</param>
     /// <param name="ct">The CancellationToken.</param>
     /// <returns></returns>
-    [Authorize]
     [HttpPut("{id:guid}")]
-    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(BrandItem))]
+    [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(ProductItem))]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Put(
-        [FromServices] ICommandHandler<UpdateBrand> handler,
+        [FromServices] ICommandHandler<UpdateProduct> handler,
         [FromRoute] Guid id,
-        [FromBody] UpdateBrand brandDto,
+        [FromBody] UpdateProduct productDto,
         CancellationToken ct)
     {
-        if (id != brandDto.Id) return BadRequest("The Id in the route is not equal to the Id in body");
+        if (id != productDto.Id) return BadRequest("The Id in the route is not equal to the Id in body");
 
         try
         {
-            await handler.Handle(brandDto, ct);
+            await handler.Handle(productDto, ct);
         }
         catch (EntityNotFoundException)
         {
@@ -147,11 +157,19 @@ public class BrandController : ControllerBase
         {
             return BadRequest(e.Message);
         }
+        catch (InvalidOperationException e)
+        {
+            return BadRequest(e.Message);
+        }
+        catch (ContextCannotBeSavedException e)
+        {
+            return Conflict(e.Message);
+        }
 
-        _logger.LogInformation("The brand with ID:'{updatedBrand}' has been updated.", brandDto.Id.ToString());
-        return Ok(brandDto);
+        _logger.LogInformation("The brand with ID:'{updatedBrand}' has been updated.", productDto.Id.ToString());
+        return Ok(productDto);
     }
-
+    
     /// <summary>
     /// Delete a brand.
     /// </summary>
@@ -159,20 +177,21 @@ public class BrandController : ControllerBase
     /// <param name="id">The Id of Brand.</param>
     /// <param name="ct">The CancellationToken.</param>
     /// <returns></returns>
-    [Authorize]
     [HttpDelete("{id:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
+    [ProducesResponseType(StatusCodes.Status409Conflict)]
     [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+    [ProducesResponseType(StatusCodes.Status403Forbidden)]
     public async Task<IActionResult> Delete(
-        [FromServices] ICommandHandler<DeleteBrand> handler,
+        [FromServices] ICommandHandler<DeleteProduct> handler,
         [FromRoute] Guid id,
         CancellationToken ct
     )
     {
         try
         {
-            await handler.Handle(new DeleteBrand(id), ct);
+            await handler.Handle(new DeleteProduct(id), ct);
         }
         catch (EntityNotFoundException)
         {
@@ -181,6 +200,10 @@ public class BrandController : ControllerBase
         catch (ArgumentException e)
         {
             return BadRequest(e.Message);
+        }
+        catch (ContextCannotBeSavedException e)
+        {
+            return Conflict(e.Message);
         }
 
         _logger.LogInformation("The brand '{id}' has been removed.", id.ToString());

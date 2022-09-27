@@ -21,34 +21,27 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : Entity
     }
 
     /// <inheritdoc/>
-    public virtual async Task<IEnumerable<T>> GetAllAsync()
+    public virtual async Task<IEnumerable<T>> GetAllAsync(CancellationToken ct)
     {
         return await DbContext
             .Set<T>()
             .OrderBy(x => x.Id)
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
     }
 
-    public async Task<IEnumerable<T>> GetAllAsync(int pageIndex, int pageSize)
+    /// <inheritdoc/>
+    public virtual async Task<IEnumerable<T>> GetAllAsync(int pageIndex, int pageSize, CancellationToken ct)
     {
         return await DbContext
             .Set<T>()
             .OrderBy(x => x.Id)
             .Skip((pageIndex - 1) * pageSize)
             .Take(pageSize)
-            .ToArrayAsync();
+            .ToArrayAsync(ct);
     }
 
     /// <inheritdoc/>
-    public virtual async Task<T?> GetAsync(Guid id)
-    {
-        Guard.Against.NullOrEmpty(id, nameof(id), "The id of entity cannot be null or empty.");
-
-        return await GetAsync(id, false);
-    }
-
-    /// <inheritdoc/>
-    public virtual async Task<T?> GetAsync(Guid id, bool asTracking)
+    public virtual async Task<T?> GetAsync(Guid id, bool asTracking, CancellationToken ct)
     {
         Guard.Against.NullOrEmpty(id, nameof(id), "The id of entity cannot be null or empty.");
 
@@ -63,7 +56,7 @@ public abstract class RepositoryBase<T> : IRepositoryBase<T> where T : Entity
 
         return await query
             .Where(x => x.Id == id)
-            .FirstOrDefaultAsync();
+            .FirstOrDefaultAsync(ct);
     }
 
     /// <inheritdoc/>

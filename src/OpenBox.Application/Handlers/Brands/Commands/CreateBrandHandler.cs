@@ -21,7 +21,7 @@ public class CreateBrandHandler : ICommandHandler<CreateBrand, Guid>
         Guard.Against.Null(command, nameof(command));
 
         var id = _brandRepository.Add(new Brand { Id = Guid.NewGuid(), Name = command.Name });
-        await _unitOfWork.SaveChangesAsync();
+        await _unitOfWork.SaveChangesAsync(ct);
 
         return id;
     }

@@ -22,7 +22,7 @@ public class BrandRepositoryTest : IClassFixture<BrandSeedDataFixture>
     public async Task Get_A_Brand_By_Name()
     {
         // Act
-        var result = await _brandRepository.GetByNameAsync("Acme");
+        var result = await _brandRepository.GetByNameAsync("Acme", false);
 
         // Assert
         Assert.NotNull(result);

@@ -28,7 +28,7 @@ public class DeleteBrandHandlerTest
         // Arrange
         var command = new DeleteBrand(Guid.NewGuid());
         _brandRepository
-            .GetAsync(Arg.Any<Guid>(), Arg.Any<bool>())
+            .GetAsync(Arg.Any<Guid>(), Arg.Any<bool>(), CancellationToken.None)
             .Returns(new Brand());
 
         // Act
@@ -40,7 +40,7 @@ public class DeleteBrandHandlerTest
             .Delete(Arg.Any<Brand>());
         await _unitOfWork
             .Received()
-            .SaveChangesAsync();
+            .SaveChangesAsync(CancellationToken.None);
     }
 
     [Fact]
@@ -49,7 +49,7 @@ public class DeleteBrandHandlerTest
         // Arrange
         var command = new DeleteBrand(Guid.NewGuid());
         _brandRepository
-            .GetAsync(Arg.Any<Guid>())
+            .GetAsync(Arg.Any<Guid>(), Arg.Any<bool>(), CancellationToken.None)
             .ReturnsNull();
 
         // Act & Assert

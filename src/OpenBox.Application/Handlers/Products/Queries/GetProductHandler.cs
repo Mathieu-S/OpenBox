@@ -18,7 +18,7 @@ public class GetProductHandler : IQueryHandler<GetProduct, ProductItem>
     {
         Guard.Against.Null(query, nameof(query));
 
-        var product = await _productRepository.GetAsync(query.Id);
+        var product = await _productRepository.GetAsync(query.Id, false, ct);
 
         if (product is null)
         {

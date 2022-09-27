@@ -2,17 +2,16 @@ using Ardalis.GuardClauses;
 using OpenBox.Application.Common;
 using OpenBox.Application.Exceptions;
 using OpenBox.Application.Repositories;
-using OpenBox.Domain.Entities;
 
 namespace OpenBox.Application.Handlers.Products.Commands;
 
-public class CreateProductHandler : ICommandHandler<CreateProduct, Guid>
+public class UpdateProductHandler : ICommandHandler<UpdateProduct>
 {
     private readonly IProductRepository _productRepository;
     private readonly IBrandRepository _brandRepository;
     private readonly IUnitOfWork _unitOfWork;
 
-    public CreateProductHandler(IProductRepository productRepository, IBrandRepository brandRepository,
+    public UpdateProductHandler(IProductRepository productRepository, IBrandRepository brandRepository,
         IUnitOfWork unitOfWork)
     {
         _productRepository = Guard.Against.Null(productRepository, nameof(productRepository));
@@ -20,10 +19,17 @@ public class CreateProductHandler : ICommandHandler<CreateProduct, Guid>
         _unitOfWork = Guard.Against.Null(unitOfWork, nameof(unitOfWork));
     }
 
-    public async Task<Guid> Handle(CreateProduct command, CancellationToken ct)
+    public async Task Handle(UpdateProduct command, CancellationToken ct)
     {
         Guard.Against.Null(command, nameof(command));
 
+        var product = await _productRepository.GetAsync(command.Id, true, ct);
+
+        if (product is null)
+        {
+            throw new EntityNotFoundException("The product does not exist.");
+        }
+        
         var brand = await _brandRepository.GetByNameAsync(command.Brand, true);
 
         if (brand is null)
@@ -31,21 +37,18 @@ public class CreateProductHandler : ICommandHandler<CreateProduct, Guid>
             throw new InvalidOperationException("The brand does not exist.");
         }
 
-        var product = new Product
-        {
-            Name = command.Name,
-            Description = command.Description,
-            Price = command.Price,
-            Brand = brand
-        };
+        product.Name = command.Name;
+        product.Description = command.Description;
+        product.Price = command.Price;
+        product.Brand = brand;
 
-        var id = _productRepository.Add(product);
+        _productRepository.Update(product);
         await _unitOfWork.SaveChangesAsync(ct);
-        return id;
     }
 }
 
-public record CreateProduct(
+public record UpdateProduct(
+    Guid Id,
     string Name,
     string? Description,
     uint Price,

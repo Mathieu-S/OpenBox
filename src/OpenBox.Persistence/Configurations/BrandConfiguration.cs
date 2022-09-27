@@ -8,12 +8,19 @@ public class BrandConfiguration : IEntityTypeConfiguration<Brand>
 {
     public void Configure(EntityTypeBuilder<Brand> builder)
     {
-        builder.HasData(
-            new Brand
-            {
-                Id = Guid.NewGuid(),
-                Name = "Acme"
-            }
-        );
+        // Entity column specification
+        builder
+            .HasIndex(x => x.Name)
+            .IsUnique();
+
+        // Seed
+        builder
+            .HasData(
+                new Brand
+                {
+                    Id = Guid.NewGuid(),
+                    Name = "Acme"
+                }
+            );
     }
 }

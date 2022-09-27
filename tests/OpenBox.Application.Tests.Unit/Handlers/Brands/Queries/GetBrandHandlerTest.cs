@@ -26,7 +26,7 @@ public class GetBrandHandlerTest
         var query = new GetBrand(Guid.NewGuid());
         var brand = new Brand { Id = query.Id, Name = "Acme" };
         _brandRepository
-            .GetAsync(Arg.Any<Guid>())
+            .GetAsync(Arg.Any<Guid>(), false, CancellationToken.None)
             .Returns(brand);
 
         // Act
@@ -44,7 +44,7 @@ public class GetBrandHandlerTest
         // Arrange
         var query = new GetBrand(Guid.NewGuid());
         _brandRepository
-            .GetAsync(Arg.Any<Guid>())
+            .GetAsync(Arg.Any<Guid>(), false, CancellationToken.None)
             .ReturnsNull();
 
         // Act & Assert

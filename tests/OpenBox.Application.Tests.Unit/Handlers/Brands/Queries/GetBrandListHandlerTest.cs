@@ -23,7 +23,7 @@ public class GetBrandListHandlerTest
         // Arrange
         var brand = new Brand { Id = Guid.NewGuid(), Name = "Acme" };
         _brandRepository
-            .GetAllAsync()
+            .GetAllAsync(CancellationToken.None)
             .Returns(new List<Brand> { brand });
         
         // Act

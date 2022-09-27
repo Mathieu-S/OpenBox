@@ -22,11 +22,11 @@ public class GetBrandListHandler : IQueryHandler<GetBrandList, IEnumerable<Brand
 
         if (query.PageIndex is not null && query.PageSize is not null)
         {
-            brands = await _brandRepository.GetAllAsync(query.PageIndex.Value, query.PageSize.Value);
+            brands = await _brandRepository.GetAllAsync(query.PageIndex.Value, query.PageSize.Value, ct);
         }
         else
         {
-            brands = await _brandRepository.GetAllAsync();
+            brands = await _brandRepository.GetAllAsync(ct);
         }
 
         return brands.Select(brand => new BrandListItem(brand.Id, brand.Name)).ToList();
