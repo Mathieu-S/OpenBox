@@ -1,6 +1,8 @@
+using Bogus;
 using OpenBox.Application.Common;
 using OpenBox.Application.Repositories;
 using OpenBox.Domain.Entities;
+using OpenBox.Domain.Tests.Unit.Fakers;
 using OpenBox.Persistence.Common;
 using OpenBox.Persistence.Repositories;
 using OpenBox.Persistence.Tests.Unit.Fixtures;
@@ -51,7 +53,7 @@ public class GenericRepositoryTest : IClassFixture<BrandSeedDataFixture>
         Assert.NotEmpty(result);
         Assert.Single(result);
     }
-    
+
     [Fact]
     public async Task Get_One()
     {
@@ -81,11 +83,7 @@ public class GenericRepositoryTest : IClassFixture<BrandSeedDataFixture>
     public async Task Add_One()
     {
         // Arrange
-        var brand = new Brand
-        {
-            Id = Guid.Empty,
-            Name = Faker.Company.Name()
-        };
+        var brand = new BrandFaker().Generate();
 
         // Act
         var result = _brandRepository.Add(brand);
@@ -101,14 +99,7 @@ public class GenericRepositoryTest : IClassFixture<BrandSeedDataFixture>
     public async Task Add_Many()
     {
         // Arrange
-        var brands = new List<Brand>
-        {
-            new()
-            {
-                Id = Guid.Empty,
-                Name = Faker.Company.Name()
-            }
-        };
+        var brands = new BrandFaker().Generate(1);
 
         // Act
         var result = _brandRepository.Add(brands);
@@ -124,7 +115,7 @@ public class GenericRepositoryTest : IClassFixture<BrandSeedDataFixture>
     public async Task Update_One()
     {
         // Arrange
-        var newBrandName = Faker.Company.Name();
+        var newBrandName = new Faker().Company.CompanyName();
         var brand = await _brandRepository.GetAsync(_brandsInDb.First().Id, true, CancellationToken.None);
 
         // Act
@@ -141,16 +132,17 @@ public class GenericRepositoryTest : IClassFixture<BrandSeedDataFixture>
     public async Task Update_Many()
     {
         // Arrange
-        var newBrandNameForFirstBrand = Faker.Company.Name();
-        var newBrandNameForLastBrand = Faker.Company.Name();
+        var faker = new Faker();
+        var newBrandNameForFirstBrand = faker.Company.CompanyName();
+        var newBrandNameForLastBrand = faker.Company.CompanyName();
         var firstBrand = await _brandRepository.GetAsync(_brandsInDb.First().Id, true, CancellationToken.None);
         var lastBrand = await _brandRepository.GetAsync(_brandsInDb.Last().Id, true, CancellationToken.None);
         firstBrand!.Name = newBrandNameForFirstBrand;
         lastBrand!.Name = newBrandNameForLastBrand;
         var brands = new List<Brand> { firstBrand, lastBrand };
-        
+
         // Act
-        
+
         _brandRepository.Update(brands);
         await _unitOfWork.SaveChangesAsync(CancellationToken.None);
 
@@ -160,7 +152,7 @@ public class GenericRepositoryTest : IClassFixture<BrandSeedDataFixture>
         Assert.Equal(newBrandNameForFirstBrand, modifiedFirstBrand.Name);
         Assert.Equal(newBrandNameForLastBrand, modifiedLastBrand.Name);
     }
-    
+
     [Fact]
     public async Task Delete_One()
     {
@@ -175,7 +167,7 @@ public class GenericRepositoryTest : IClassFixture<BrandSeedDataFixture>
         var brandsInDatabase = _brandsInDb.ToList();
         Assert.DoesNotContain(brand, brandsInDatabase);
     }
-    
+
     [Fact]
     public async Task Delete_Many()
     {

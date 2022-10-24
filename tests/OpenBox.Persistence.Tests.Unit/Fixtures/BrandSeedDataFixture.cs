@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using OpenBox.Domain.Entities;
+using OpenBox.Domain.Tests.Unit.Fakers;
 
 namespace OpenBox.Persistence.Tests.Unit.Fixtures;
 
@@ -19,12 +20,7 @@ public class BrandSeedDataFixture : IDisposable
 
     public OpenBoxDbContext DbContext { get; }
 
-    public static IEnumerable<Brand> Brands =>
-        new List<Brand>
-        {
-            new() { Id = Guid.NewGuid(), Name = Faker.Company.Name() },
-            new() { Id = Guid.NewGuid(), Name = Faker.Company.Name() }
-        };
+    public static IEnumerable<Brand> Brands => new BrandFaker().Generate(2);
 
     public void Dispose()
     {

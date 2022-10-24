@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Http.Json;
+using Bogus;
 using OpenBox.Application.Handlers.Brands.Commands;
 using OpenBox.WebApi.Tests.Integration.Fixtures;
 using Xunit;
@@ -46,7 +47,7 @@ public class BrandTest
     public async Task Post()
     {
         // Arrange
-        var newBrand = new CreateBrand(Faker.Company.Name());
+        var newBrand = new CreateBrand(new Faker().Company.CompanyName());
 
         // Act
         var response = await _application.Client.PostAsJsonAsync("/brands", newBrand);
@@ -60,7 +61,8 @@ public class BrandTest
     public async Task Put()
     {
         // Arrange
-        var brandToEdit = new UpdateBrand(Guid.Parse("b9371076-60d2-43c4-9856-8b8799e9ce69"), Faker.Company.Name());
+        var brandToEdit = new UpdateBrand(Guid.Parse("b9371076-60d2-43c4-9856-8b8799e9ce69"),
+            new Faker().Company.CompanyName());
 
         // Act
         var response = await _application.Client.PutAsJsonAsync($"/brands/{brandToEdit.Id}", brandToEdit);
