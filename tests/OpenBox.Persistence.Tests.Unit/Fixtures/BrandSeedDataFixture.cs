@@ -1,11 +1,11 @@
 using Microsoft.EntityFrameworkCore;
-using OpenBox.Domain.Entities;
-using OpenBox.Domain.Tests.Unit.Fakers;
 
 namespace OpenBox.Persistence.Tests.Unit.Fixtures;
 
 public class BrandSeedDataFixture : IDisposable
 {
+    public OpenBoxDbContext DbContext { get; }
+
     public BrandSeedDataFixture()
     {
         var options = new DbContextOptionsBuilder<OpenBoxDbContext>()
@@ -13,14 +13,13 @@ public class BrandSeedDataFixture : IDisposable
             .Options;
 
         DbContext = new OpenBoxDbContext(options);
-        DbContext.Database.EnsureCreated();
-        DbContext.AddRange(Brands);
-        DbContext.SaveChanges();
+        Seed();
     }
 
-    public OpenBoxDbContext DbContext { get; }
-
-    public static IEnumerable<Brand> Brands => new BrandFaker().Generate(2);
+    private void Seed()
+    {
+        DbContext.Database.EnsureCreated();
+    }
 
     public void Dispose()
     {

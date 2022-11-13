@@ -12,7 +12,10 @@ public sealed class ProductFaker : Faker<Product>
         RuleFor(x => x.Name, f => f.Random.Word());
         RuleFor(x => x.Description, f => f.Lorem.Sentence());
         RuleFor(x => x.Price, f => f.Random.UInt());
+
         // Relations
-        RuleFor(x => x.Brand, new BrandFaker().Generate());
+        var brand = new BrandFaker().Generate();
+        RuleFor(x => x.BrandId, brand.Id);
+        RuleFor(x => x.Brand, brand);
     }
 }
