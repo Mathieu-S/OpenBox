@@ -11,7 +11,7 @@ public class GetBrandHandler : IQueryHandler<GetBrand, BrandItem>
 
     public GetBrandHandler(IBrandRepository brandRepository)
     {
-        _brandRepository = brandRepository;
+        _brandRepository = Guard.Against.Null(brandRepository, nameof(brandRepository));
     }
 
     public async Task<BrandItem> Handle(GetBrand query, CancellationToken ct)
@@ -19,6 +19,7 @@ public class GetBrandHandler : IQueryHandler<GetBrand, BrandItem>
         Guard.Against.Null(query);
 
         var brand = await _brandRepository.GetAsync(query.Id, false, ct);
+
         if (brand is null)
         {
             throw new EntityNotFoundException();

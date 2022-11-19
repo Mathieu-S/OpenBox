@@ -46,5 +46,5 @@ public record ProductListItem(
     string Name,
     string? Description,
     uint Price,
-    string? Brand
+    string Brand
 );

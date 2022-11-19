@@ -1,6 +1,5 @@
 using Ardalis.GuardClauses;
 using OpenBox.Application.Common;
-using OpenBox.Application.Exceptions;
 using OpenBox.Application.Repositories;
 using OpenBox.Domain.Entities;
 

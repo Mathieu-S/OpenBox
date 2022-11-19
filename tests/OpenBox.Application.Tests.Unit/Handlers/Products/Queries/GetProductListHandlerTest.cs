@@ -2,6 +2,7 @@ using NSubstitute;
 using OpenBox.Application.Handlers.Products.Queries;
 using OpenBox.Application.Repositories;
 using OpenBox.Domain.Entities;
+using OpenBox.Domain.Tests.Unit.Fakers;
 using Xunit;
 
 namespace OpenBox.Application.Tests.Unit.Handlers.Products.Queries;
@@ -22,21 +23,20 @@ public class GetProductListHandlerTest
     {
         // Arrange
         var query = new GetProductList(null, null);
-        var brand = new Brand { Id = Guid.NewGuid(), Name = "Acme" };
-        var product = new Product { Id = Guid.NewGuid(), Name = "Fork", Description = null, Price = 10, Brand = brand };
+        var product = new ProductFaker().Generate();
         _productRepository
             .GetAllAsync(CancellationToken.None)
             .Returns(new List<Product> { product });
 
         // Act
-        var result = await _handler.Handle(query, CancellationToken.None);
+        var result = (await _handler.Handle(query, CancellationToken.None)).ToList();
 
         // Assert
         Assert.NotNull(result);
-        Assert.Equal(product.Id, result.FirstOrDefault()!.Id);
-        Assert.Equal(product.Name, result.FirstOrDefault()!.Name);
-        Assert.Null(result.FirstOrDefault()!.Description);
-        Assert.Equal(product.Price, result.FirstOrDefault()!.Price);
-        Assert.Equal(brand.Name, result.FirstOrDefault()!.Brand);
+        Assert.Equal(product.Id, result.First().Id);
+        Assert.Equal(product.Name, result.First().Name);
+        Assert.Equal(product.Description, result.First().Description);
+        Assert.Equal(product.Price, result.First().Price);
+        Assert.Equal(product.Brand.Name, result.First().Brand);
     }
 }

@@ -3,7 +3,7 @@ using NSubstitute.ReturnsExtensions;
 using OpenBox.Application.Exceptions;
 using OpenBox.Application.Handlers.Brands.Queries;
 using OpenBox.Application.Repositories;
-using OpenBox.Domain.Entities;
+using OpenBox.Domain.Tests.Unit.Fakers;
 using Xunit;
 
 namespace OpenBox.Application.Tests.Unit.Handlers.Brands.Queries;
@@ -20,11 +20,11 @@ public class GetBrandHandlerTest
     }
 
     [Fact]
-    public async Task Handle()
+    public async Task Handle_Valid()
     {
         // Arrange
-        var query = new GetBrand(Guid.NewGuid());
-        var brand = new Brand { Id = query.Id, Name = "Acme" };
+        var brand = new BrandFaker().Generate();
+        var query = new GetBrand(brand.Id);
         _brandRepository
             .GetAsync(Arg.Any<Guid>(), false, CancellationToken.None)
             .Returns(brand);

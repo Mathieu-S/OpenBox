@@ -2,6 +2,7 @@ using System.Runtime.Serialization;
 
 namespace OpenBox.Application.Exceptions;
 
+[Serializable]
 public class ContextCannotBeSavedException : Exception
 {
     public ContextCannotBeSavedException()

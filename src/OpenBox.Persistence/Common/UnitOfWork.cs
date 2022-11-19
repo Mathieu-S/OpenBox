@@ -17,7 +17,14 @@ public class UnitOfWork : IUnitOfWork
     /// <inheritdoc />
     public async Task SaveChangesAsync()
     {
-        await SaveChangesAsync(CancellationToken.None);
+        try
+        {
+            await SaveChangesAsync(CancellationToken.None);
+        }
+        catch (Exception e)
+        {
+            throw new ContextCannotBeSavedException("An error occurred while saving data. Please check the logs.", e);
+        }
     }
 
     /// <inheritdoc />

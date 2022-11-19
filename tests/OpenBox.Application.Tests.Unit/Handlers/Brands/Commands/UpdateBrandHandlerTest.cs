@@ -21,7 +21,7 @@ public class UpdateBrandHandlerTest
         _unitOfWork = Substitute.For<IUnitOfWork>();
         _handler = new UpdateBrandHandler(_brandRepository, _unitOfWork);
     }
-    
+
     [Fact]
     public async Task Handle()
     {
@@ -30,7 +30,7 @@ public class UpdateBrandHandlerTest
         _brandRepository
             .GetAsync(Arg.Any<Guid>(), Arg.Any<bool>(), CancellationToken.None)
             .Returns(new Brand());
-        
+
         // Act
         await _handler.Handle(command, CancellationToken.None);
 
@@ -42,7 +42,7 @@ public class UpdateBrandHandlerTest
             .Received()
             .SaveChangesAsync(CancellationToken.None);
     }
-    
+
     [Fact]
     public async Task Handle_Throw_EntityNotFoundException()
     {
@@ -51,11 +51,11 @@ public class UpdateBrandHandlerTest
         _brandRepository
             .GetAsync(Arg.Any<Guid>(), Arg.Any<bool>(), CancellationToken.None)
             .ReturnsNull();
-        
+
         // Act & Assert
         await Assert.ThrowsAsync<EntityNotFoundException>(() => _handler.Handle(command, CancellationToken.None));
     }
-    
+
     [Theory]
     [MemberData(nameof(InvalidCommands))]
     public async Task Handle_Throw_ArgumentException(UpdateBrand command)

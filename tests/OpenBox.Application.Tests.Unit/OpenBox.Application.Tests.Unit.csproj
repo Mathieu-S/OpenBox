@@ -30,6 +30,7 @@
 
     <ItemGroup>
       <ProjectReference Include="..\..\src\OpenBox.Application\OpenBox.Application.csproj" />
+      <ProjectReference Include="..\OpenBox.Domain.Tests.Unit\OpenBox.Domain.Tests.Unit.csproj" />
     </ItemGroup>
 
     <ItemGroup>
