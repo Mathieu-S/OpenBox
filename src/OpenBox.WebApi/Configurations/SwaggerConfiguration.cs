@@ -46,13 +46,13 @@ public static class SwaggerConfiguration
                 Type = OpenApiSecuritySchemeType.Http,
                 Scheme = JwtBearerDefaults.AuthenticationScheme,
                 BearerFormat = "JWT",
-                Description = "Type into the textbox: {your JWT token}."
+                Description = "Type into the text box: {your JWT token}."
             });
 
             document.AddSecurity("OAuth2", Enumerable.Empty<string>(), new OpenApiSecurityScheme
             {
                 Type = OpenApiSecuritySchemeType.OAuth2,
-                Description = "Keycloack form",
+                Description = "Keycloak form",
                 Flow = OpenApiOAuth2Flow.AccessCode,
                 Flows = new OpenApiOAuthFlows
                 {
