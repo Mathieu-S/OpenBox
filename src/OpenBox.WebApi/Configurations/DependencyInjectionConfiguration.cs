@@ -22,24 +22,24 @@ public static class DependencyInjectionConfiguration
 
             // Queries
             .AddClasses(classes => classes.AssignableTo(typeof(IQueryHandler<,>))
-                .Where(c => !c.IsAbstract && !c.IsGenericTypeDefinition))
+                .Where(c => c is { IsAbstract: false, IsGenericTypeDefinition: false }))
             .AsSelfWithInterfaces()
             .WithLifetime(ServiceLifetime.Scoped)
 
             // Commands
             .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<>))
-                .Where(c => !c.IsAbstract && !c.IsGenericTypeDefinition))
+                .Where(c => c is { IsAbstract: false, IsGenericTypeDefinition: false }))
             .AsSelfWithInterfaces()
             .WithLifetime(ServiceLifetime.Scoped)
             
             .AddClasses(classes => classes.AssignableTo(typeof(ICommandHandler<,>))
-                .Where(c => !c.IsAbstract && !c.IsGenericTypeDefinition))
+                .Where(c => c is { IsAbstract: false, IsGenericTypeDefinition: false }))
             .AsSelfWithInterfaces()
             .WithLifetime(ServiceLifetime.Scoped)
 
             // Repositories
             .AddClasses(classes => classes.AssignableTo(typeof(IRepositoryBase<>))
-                .Where(c => !c.IsAbstract && !c.IsGenericTypeDefinition))
+                .Where(c => c is { IsAbstract: false, IsGenericTypeDefinition: false }))
             .AsSelfWithInterfaces()
             .WithLifetime(ServiceLifetime.Scoped)
         );
