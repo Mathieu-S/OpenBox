@@ -8,7 +8,7 @@ namespace OpenBox.WebApi.Controllers;
 /// </summary>
 [ApiController]
 [ApiExplorerSettings(IgnoreApi = true)]
-public class ErrorController : ControllerBase
+public sealed class ErrorController : ControllerBase
 {
     /// <summary>
     /// The development fallback for unhandled exceptions.

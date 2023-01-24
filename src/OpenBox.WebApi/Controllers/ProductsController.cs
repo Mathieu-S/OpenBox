@@ -12,7 +12,7 @@ namespace OpenBox.WebApi.Controllers;
 [Authorize("Manager")]
 [Route("[controller]")]
 [Produces("application/json")]
-public class ProductsController : ControllerBase
+public sealed class ProductsController : ControllerBase
 {
     private readonly ILogger<ProductsController> _logger;
 
