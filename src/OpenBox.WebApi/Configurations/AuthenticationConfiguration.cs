@@ -22,8 +22,8 @@ public static class AuthenticationConfiguration
             )
             .AddJwtBearer(options =>
                 {
-                    options.Audience = builder.Configuration["Identity:Audience"];
-                    options.MetadataAddress = builder.Configuration["Identity:MetadataAddress"];
+                    options.Audience = builder.Configuration["Identity:Audience"] ?? string.Empty;
+                    options.MetadataAddress = builder.Configuration["Identity:MetadataAddress"] ?? string.Empty;
                     options.SaveToken = true;
                     if (builder.Environment.IsDevelopment())
                     {
