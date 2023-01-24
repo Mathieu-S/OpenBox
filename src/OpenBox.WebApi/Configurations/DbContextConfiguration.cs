@@ -27,17 +27,20 @@ public static class DbContextConfiguration
     /// <exception cref="TimeoutException">Throw if the database is unreachable.</exception>
     public static void CheckDatabaseConnection(this WebApplication app)
     {
-        using var scope = app.Services.CreateScope();
-        var dbContext = scope.ServiceProvider.GetRequiredService<OpenBoxDbContext>();
+        if (Convert.ToBoolean(app.Configuration["CheckDatabaseConnectionAtStartup"]))
+        {
+            using var scope = app.Services.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<OpenBoxDbContext>();
 
-        var canConnect = dbContext.Database.CanConnect();
-        if (canConnect)
-        {
-            dbContext.Database.EnsureCreated();
-        }
-        else
-        {
-            throw new TimeoutException("The main database is unreachable.");
+            var canConnect = dbContext.Database.CanConnect();
+            if (canConnect)
+            {
+                dbContext.Database.EnsureCreated();
+            }
+            else
+            {
+                throw new TimeoutException("The main database is unreachable.");
+            }
         }
     }
 }
